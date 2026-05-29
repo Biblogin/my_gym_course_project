@@ -18,7 +18,12 @@ def get_sgd_regression():
     print("\nОбучаем модель через Стохастический Градиентный Спуск (SGD)...")
     # make_pipeline объединяет масштабирование и саму модель в один понятный объект
     # Теперь данные внутри будут автоматически нормализоваться перед каждым шагом спуска
-    return make_pipeline(StandardScaler(), SGDRegressor(random_state=42))
+    return make_pipeline(StandardScaler(), SGDRegressor(
+        loss='squared_error',
+        max_iter=1000,
+        tol=1e-3,
+        random_state=42)
+    )
 
 
 def get_kernel_regression(X_sample, y_sample):
