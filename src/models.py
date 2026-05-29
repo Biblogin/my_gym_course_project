@@ -11,7 +11,7 @@ from sklearn.ensemble import RandomForestRegressor
 def get_linear_regression():
     print("\nОбучаем модель Линейной Регрессии...")
     # модель под капотом будет использовать матричную формулу w^* = (X^T X)^{-1} * X^T * y
-    return LinearRegression()
+    return LinearRegression(fit_intercept=True)
 
 
 def get_sgd_regression():
