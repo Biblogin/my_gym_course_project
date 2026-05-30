@@ -67,31 +67,35 @@ def get_random_forest(X_sample, y_sample):
     # max_depth ограничивает рост дерева (от переобучения)
     # min_samples_split - сколько минимум объектов должно быть в листе, чтобы его поделить
     param_grid = {
-        'max_depth': [15, 20, 50, None],
-        'min_samples_split': [2, 10]
+        'n_estimators': [50, 100, 150],
+        'max_depth': [10, 15, 20, None],
+        'min_samples_split': [2, 5, 10]
     }
 
-    base_model = RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1)
+    base_model = RandomForestRegressor(random_state=42, n_jobs=-1)
 
     print("\tЗапуск GridSearchCV на подвыборке")
     grid_search = GridSearchCV(
         estimator=base_model,
         param_grid=param_grid,
         cv=3,
-        scoring='neg_mean_absolute_error'
+        scoring='neg_mean_absolute_error',
+        n_jobs=-1
     )
 
     grid_search.fit(X_sample, y_sample)
 
+    best_n_estimators = grid_search.best_params_['n_estimators']
     best_depth = grid_search.best_params_['max_depth']
     best_split = grid_search.best_params_['min_samples_split']
 
     print("\t--- Лучшие параметры найдены ---")
+    print(f"\tОптимальное кол-во деревьев (n_estimators): {best_n_estimators}")
     print(f"\tМаксимальная глубина (max_depth): {best_depth}")
     print(f"\tМин. объектов для разделения (min_samples_split): {best_split}\n")
 
     return RandomForestRegressor(
-        n_estimators=100,
+        n_estimators=best_n_estimators,
         max_depth=best_depth,
         min_samples_split=best_split,
         random_state=42,
